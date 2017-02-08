@@ -624,7 +624,6 @@ def get_parser():
                         help="Travis user name")
     parser.add_argument("--output-bytes",
                         action="store",
-                        default=None,
                         type=int,
                         help="Maximum number of bytes to write to standard output/error")
     parser.add_argument("product",
@@ -643,8 +642,9 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    replace_streams(args.output_bytes,
-                    "Log reached capacity (%s bytes); output disabled." % args.output_bytes)
+    if args.output_bytes is not None:
+        replace_streams(args.output_bytes,
+                        "Log reached capacity (%s bytes); output disabled." % args.output_bytes)
 
     logger = logging.getLogger(os.path.splitext(__file__)[0])
     setup_logging()
