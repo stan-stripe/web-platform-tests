@@ -106,14 +106,16 @@ class TravisFold(object):
         print("travis_fold:end:%s" % self.name, file=sys.stderr)
 
 
-class FilteredIO(StringIO):
+class FilteredIO(object):
     """Wrap a file object, invoking the provided callback for every call to
     `write` and only proceeding with the operation when that callback returns
     True."""
     def __init__(self, original, on_write):
         self.original = original
         self.on_write = on_write
-        StringIO.__init__(self)
+
+    def __getattr__(self, name):
+        return getattr(self.original, name)
 
     def disable(self):
         self.write = lambda msg: None
